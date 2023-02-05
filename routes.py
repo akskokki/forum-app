@@ -1,7 +1,7 @@
 from app import app
 from flask import redirect, render_template, request
 from os import getenv
-import users, topics, threads
+import users, topics, threads, replies
 
 app.secret_key = getenv("SECRET_KEY")
 
@@ -70,4 +70,13 @@ def createthread(topic_id):
 
 @app.route("/topic/<int:topic_id>/thread/<thread_id>")
 def thread(topic_id, thread_id):
-    return f"This is thread {thread_id}"
+    thread = threads.find_by_id(thread_id)
+    replies_list = replies.get_list(thread_id)
+    return render_template("thread.html", thread_id=thread_id, topic_id=topic_id, thread=thread, replies=replies_list)
+
+
+@app.route("/topic/<int:topic_id>/thread/<int:thread_id>/createreply", methods=["POST"])
+def createreply(topic_id, thread_id):
+    content = request.form["content"]
+    replies.create(thread_id, content)
+    return redirect(f"/topic/{topic_id}/thread/{thread_id}")

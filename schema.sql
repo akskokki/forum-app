@@ -19,7 +19,7 @@ CREATE TABLE threads (
     time TIMESTAMP
 );
 
-CREATE TABLE messages (
+CREATE TABLE replies (
     id SERIAL PRIMARY KEY,
     content TEXT,
     thread_id INTEGER REFERENCES threads,
