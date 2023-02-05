@@ -1,14 +1,14 @@
 from app import app
 from flask import redirect, render_template, request
 from os import getenv
-import users
+import users, topics, threads
 
 app.secret_key = getenv("SECRET_KEY")
 
 @app.route("/")
 def index():
-    
-    return render_template("index.html")
+    topic_list = topics.get_list()
+    return render_template("index.html", topic_list=topic_list)
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -30,7 +30,7 @@ def createuser():
         if password != password_retype:
             return render_template("createuser.html", notification="Passwords don't match")
         if users.create(username, password):
-            return render_template("createuser.html", notification=f"User <b>{username}</b> created successfully")
+            return render_template("createuser.html", notification=f"User {username} created successfully")
         else:
             return render_template("createuser.html", notification="User creation failed")
 
@@ -38,3 +38,36 @@ def createuser():
 def logout():
     users.logout()
     return redirect("/")
+
+@app.route("/createtopic", methods=["GET", "POST"])
+def createtopic():
+    if request.method == "GET":
+        return render_template("createtopic.html")
+    if request.method == "POST":
+        title = request.form["title"]
+        topics.create(title)
+        return render_template("createtopic.html", notification=f"Topic {title} created successfully")
+    
+@app.route("/topic/<int:id>")
+def topic(id):
+    topic = topics.find_by_id(id)
+    thread_list = threads.get_list(id)
+    return render_template("topic.html", id=id, title=topic[0], threads=thread_list)
+
+@app.route("/topic/<int:topic_id>/createthread", methods=["GET", "POST"])
+def createthread(topic_id):
+    topic = topics.find_by_id(topic_id)
+    if request.method == "GET":
+        return render_template("createthread.html", topic_id=topic_id, topic_title=topic[0])
+    if request.method == "POST":
+        title = request.form["title"]
+        content = request.form["content"]
+        thread_id = threads.create(topic_id, title, content)
+        if thread_id == 0:
+            return render_template("createthread.html", topic_id=topic_id, topic_title=topic[0], notification="Thread creation failed")
+        else:
+            return redirect(f"/topic/{topic_id}/thread/{thread_id}")
+
+@app.route("/topic/<int:topic_id>/thread/<thread_id>")
+def thread(topic_id, thread_id):
+    return f"This is thread {thread_id}"

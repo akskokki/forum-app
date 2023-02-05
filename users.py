@@ -28,3 +28,6 @@ def login(username, password):
 
 def logout():
     session.clear()
+
+def user_id():
+    return session.get("user_id", 0)

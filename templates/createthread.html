@@ -1,0 +1,19 @@
+<h2>Creating thread in topic: {{ topic_title }}</h2>
+
+{% if notification %}
+<p>{{ notification }}</p>
+{% endif %}
+
+<form action="/topic/{{ topic_id }}/createthread" method="POST">
+    <p>
+        Thread title:<br>
+        <input type="text" name="title">
+    </p>
+    <p>
+        Content:<br>
+        <textarea name="content" rows="8" cols="60"></textarea>
+    </p>
+    <input type="submit" value="Create thread">
+</form>
+
+<a href="/topic/{{ topic_id }}">Return</a>

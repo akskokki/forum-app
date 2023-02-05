@@ -1,0 +1,14 @@
+<h1>Topic: {{ title }}</h1>
+
+{% if session.user_id %}
+<a href="/topic/{{ id }}/createthread">Create new thread</a>
+{% endif %}
+
+<div>
+    <h2>Threads:</h2>
+    <hr>
+    {% for thread in threads %}
+    <a href="/topic/{{ id }}/thread/{{ thread[0] }}">{{ thread[1] }}</a>
+    <hr>
+    {% endfor %}
+</div>

@@ -7,6 +7,7 @@
     Currently logged in as {{ session.username }}<br>
     <a href="/logout">Log out</a>
 </p>
+<p><a href="/createtopic">Create new topic</a></p>
 {% else %}
 <form action="/login" method="POST">
     <p>
@@ -19,5 +20,14 @@
     </p>
     <input type="submit" value="Log in">
 </form>
-<a href="/createuser">Create new user</a>
+<p><a href="/createuser">Create new user</a></p>
 {% endif %}
+
+<div>
+    <h2>Topics:</h2>
+    <hr>
+    {% for topic in topic_list %}
+    <a href="topic/{{ topic[0] }}">{{ topic[1] }}</a>
+    <hr>
+    {% endfor %}
+</div>

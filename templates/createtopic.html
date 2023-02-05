@@ -1,0 +1,13 @@
+{% if notification %}
+<p>{{ notification }}</p>
+{% endif %}
+
+<form action="/createtopic" method="POST">
+    <p>
+        New topic title:<br>
+        <input type="text" name="title">
+    </p>
+    <input type="submit" value="Create topic">
+</form>
+
+<a href="/">Return</a>
