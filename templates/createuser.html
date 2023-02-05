@@ -1,0 +1,21 @@
+{% if notification %}
+<p>{{notification}}</p>
+{% endif %}
+
+<form action="/createuser" method="POST">
+    <p>
+        Username:<br>
+        <input type="text" name="username">
+    </p>
+    <p>
+        Password:<br>
+        <input type="password" name="password">
+    </p>
+    <p>
+        Retype password:<br>
+        <input type="password" name="password_retype">
+    </p>
+    <input type="submit" value="Create user">
+</form>
+
+<a href="/">Return</a>
