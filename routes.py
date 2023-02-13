@@ -1,13 +1,20 @@
 from app import app
-from flask import redirect, render_template, request
+from flask import redirect, render_template, request, url_for
 from os import getenv
 import users, topics, threads, replies
 
 app.secret_key = getenv("SECRET_KEY")
 
+def check_args(arg):
+    if arg in request.args:
+        return request.args[arg]
+    return None
+
 @app.route("/")
 def index():
-    return render_template("index.html", topic_list=topics.get_list())
+    notification = check_args('notification')
+    username = check_args('username')
+    return render_template("index.html", topic_list=topics.get_list(), notification=notification, username=username)
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -16,7 +23,7 @@ def login():
     if users.login(username, password):
         return redirect("/")
     else:
-        return render_template("index.html", topic_list=topics.get_list(), notification="Login failed")
+        return redirect(url_for(".index", notification="Invalid username or password", username=username))
 
 @app.route("/createuser", methods=["GET", "POST"])
 def createuser():
