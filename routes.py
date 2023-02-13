@@ -7,8 +7,7 @@ app.secret_key = getenv("SECRET_KEY")
 
 @app.route("/")
 def index():
-    topic_list = topics.get_list()
-    return render_template("index.html", topic_list=topic_list)
+    return render_template("index.html", topic_list=topics.get_list())
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -17,7 +16,7 @@ def login():
     if users.login(username, password):
         return redirect("/")
     else:
-        return render_template("index.html", notification="Login failed")
+        return render_template("index.html", topic_list=topics.get_list(), notification="Login failed")
 
 @app.route("/createuser", methods=["GET", "POST"])
 def createuser():

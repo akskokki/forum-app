@@ -8,7 +8,9 @@ def get_list(topic_id):
     return result.fetchall()
 
 def find_by_id(id):
-    sql = text("SELECT title, content FROM threads WHERE id=:id")
+    sql = text("SELECT T.title, T.content, U.username"\
+               " FROM threads T, users U"\
+               " WHERE T.id=:id AND U.id=T.user_id")
     result = db.session.execute(sql, {"id": id})
     return result.fetchone()
 

@@ -1,6 +1,6 @@
 <h1>{{ thread.title }}</h1>
 <hr>
-<div><b>(thread user goes here)</b></div>
+<div><b>{{ thread.username }}</b></div>
 <p>
     {{ thread.content }}
 </p>
@@ -8,7 +8,7 @@
 <hr>
 <hr>
 {% for reply in replies %}
-<div><b>(reply user goes here)</b></div>
+<div><b>{{ reply.username }}</b></div>
 <p>
     {{ reply.content }}
 </p>
@@ -25,4 +25,7 @@
 </form>
 {% endif %}
 
-<a href="/topic/{{ topic_id }}">Return</a>
+<br>
+<div><a href="/topic/{{ topic_id }}">Return to topic</a></div>
+<br>
+<div><a href="/">Return to front page</a></div>
