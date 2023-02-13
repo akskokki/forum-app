@@ -57,7 +57,7 @@ def createtopic():
     if request.method == "POST":
         title = request.form["title"]
         topics.create(title)
-        return render_template("createtopic.html", notification=f"Topic {title} created successfully")
+        return redirect("/")
     
 @app.route("/topic/<int:id>")
 def topic(id):
@@ -69,13 +69,14 @@ def topic(id):
 def createthread(topic_id):
     topic = topics.find_by_id(topic_id)
     if request.method == "GET":
-        return render_template("createthread.html", topic_id=topic_id, topic_title=topic[0])
+        notification = check_args('notification')
+        return render_template("createthread.html", topic_id=topic_id, topic_title=topic[0], notification=notification)
     if request.method == "POST":
         title = request.form["title"]
         content = request.form["content"]
         thread_id = threads.create(topic_id, title, content)
         if thread_id == 0:
-            return render_template("createthread.html", topic_id=topic_id, topic_title=topic[0], notification="Thread creation failed")
+            return redirect("/noperms")
         else:
             return redirect(f"/topic/{topic_id}/thread/{thread_id}")
 
@@ -91,3 +92,7 @@ def createreply(topic_id, thread_id):
     content = request.form["content"]
     replies.create(thread_id, content)
     return redirect(f"/topic/{topic_id}/thread/{thread_id}")
+
+@app.route("/noperms")
+def noperms():
+    return render_template("noperms.html")
