@@ -12,8 +12,8 @@ def check_args(arg):
 
 @app.route("/")
 def index():
-    notification = check_args('notification')
-    username = check_args('username')
+    notification = check_args("notification")
+    username = check_args("username")
     return render_template("index.html", topic_list=topics.get_list(), notification=notification, username=username)
 
 @app.route("/login", methods=["POST"])
@@ -28,17 +28,22 @@ def login():
 @app.route("/createuser", methods=["GET", "POST"])
 def createuser():
     if request.method == "GET":
-        return render_template("createuser.html")
+        notification = check_args("notification")
+        username = check_args("username")
+        return render_template("createuser.html", notification=notification, username=username)
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
         password_retype = request.form["password_retype"]
+        if len(username) < 1 or len(password) < 1:
+            return redirect(url_for(".createuser", notification="Username and password must not be blank", username=username))
         if password != password_retype:
-            return render_template("createuser.html", notification="Passwords don't match")
+            return redirect(url_for(".createuser", notification="Passwords don't match", username=username))
         if users.create(username, password):
-            return render_template("createuser.html", notification=f"User {username} created successfully")
+            users.login(username, password)
+            return redirect(url_for(".index", notification="User created successfully"))
         else:
-            return render_template("createuser.html", notification="User creation failed")
+            return redirect(url_for(".createuser.html", notification="Username is taken", username=username))
 
 @app.route("/logout")
 def logout():
