@@ -3,7 +3,11 @@ from sqlalchemy.sql import text
 import users
 
 def get_list(topic_id):
-    sql = text("SELECT id, title FROM threads WHERE topic_id=:topic_id ORDER BY id")
+    sql = text("SELECT T.id, T.title, COUNT(R.id) reply_count "\
+               "FROM threads T LEFT JOIN replies R ON T.id=R.thread_id "\
+               "WHERE topic_id=:topic_id "\
+               "GROUP BY T.id "\
+               "ORDER BY T.id")
     result = db.session.execute(sql, {"topic_id": topic_id})
     return result.fetchall()
 

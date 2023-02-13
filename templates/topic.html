@@ -8,7 +8,8 @@
     <h2>Threads:</h2>
     <hr>
     {% for thread in threads %}
-    <a href="/topic/{{ id }}/thread/{{ thread[0] }}">{{ thread[1] }}</a>
+    <a href="/topic/{{ id }}/thread/{{ thread[0] }}">{{ thread[1] }}</a><br>
+    Replies: {{ thread.reply_count }}
     <hr>
     {% endfor %}
 </div>
