@@ -84,6 +84,9 @@ def createthread(topic_id):
 def thread(topic_id, thread_id):
     thread = threads.find_by_id(thread_id)
     messages_list = messages.get_list(thread_id)
+    for message in messages_list:
+        print(message.time)
+        print(type(message.time))
     return render_template("thread.html", thread_id=thread_id, topic_id=topic_id, thread=thread, messages=messages_list)
 
 

@@ -3,7 +3,7 @@ from sqlalchemy.sql import text
 import users
 
 def get_list(thread_id):
-    sql = text("SELECT M.id, M.content, U.username"\
+    sql = text("SELECT M.id, M.content, U.username, M.time"\
                " FROM messages M, users U"\
                " WHERE M.user_id=U.id AND M.thread_id=:thread_id"\
                " ORDER BY M.id")

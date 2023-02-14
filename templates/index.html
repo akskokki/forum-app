@@ -30,9 +30,14 @@
     <h2>Topics:</h2>
     <hr>
     {% for topic in topic_list %}
-    <a href="topic/{{ topic[0] }}">{{ topic[1] }}</a><br>
-    Threads: {{ topic.thread_count }}<br>
-    Messages: {{ topic.message_count }}
+    <a href="topic/{{ topic.id }}">{{ topic.title }}</a><br>
+    Threads: {{ topic.thread_count or 0 }}<br>
+    Messages: {{ topic.message_count or 0 }}<br>
+    {% if topic.latest_time %}
+    Latest message on {{ topic.latest_time.strftime("%Y-%m-%d, %H:%M:%S") }}
+    in <a href="topic/{{ topic.id }}/thread/{{ topic.latest_id }}">{{ topic.latest_title }}</a>
+    from {{ topic.latest_user }}
+    {% endif %}
     <hr>
     {% endfor %}
 </div>

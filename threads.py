@@ -3,11 +3,21 @@ from sqlalchemy.sql import text
 import users, messages
 
 def get_list(topic_id):
-    sql = text("SELECT T.id, T.title, COUNT(M.id) message_count"\
-               " FROM threads T LEFT JOIN messages M ON T.id=M.thread_id"\
-               " WHERE topic_id=:topic_id"\
-               " GROUP BY T.id"\
-               " ORDER BY T.id")
+    sql = text("""
+        SELECT T.id, T.title, TU.username, S.latest_time, MU.username latest_user, S.message_count
+        FROM threads T
+            LEFT JOIN (
+                SELECT thread_id, MAX(time) latest_time, COUNT(id) message_count
+                FROM messages
+                GROUP BY thread_id
+            ) S ON T.id = S.thread_id
+            LEFT JOIN messages M ON M.thread_id = T.id
+                AND M.time = S.latest_time
+            LEFT JOIN users TU ON T.user_id = TU.id
+            LEFT JOIN users MU ON M.user_id = MU.id
+        WHERE T.topic_id = :topic_id
+        ORDER BY M.time DESC
+    """)
     result = db.session.execute(sql, {"topic_id": topic_id})
     return result.fetchall()
 

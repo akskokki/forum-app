@@ -8,8 +8,10 @@
     <h2>Threads:</h2>
     <hr>
     {% for thread in threads %}
-    <a href="/topic/{{ id }}/thread/{{ thread[0] }}">{{ thread[1] }}</a><br>
-    Messages: {{ thread.message_count }}
+    <a href="/topic/{{ id }}/thread/{{ thread.id }}">{{ thread.title }}</a><br>
+    Messages: {{ thread.message_count }}<br>
+    Latest message on {{ thread.latest_time.strftime("%Y-%m-%d, %H:%M:%S") }}
+    by {{ thread.latest_user }}
     <hr>
     {% endfor %}
 </div>

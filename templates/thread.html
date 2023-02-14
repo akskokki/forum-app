@@ -1,7 +1,9 @@
 <h1>{{ thread.title }}</h1>
 <hr>
+
 {% for message in messages %}
 <div><b>{{ message.username }}</b></div>
+<div><i>{{ message.time.strftime("%Y-%m-%d, %H:%M:%S") }}</i></div>
 <p>
     {{ message.content }}
 </p>
