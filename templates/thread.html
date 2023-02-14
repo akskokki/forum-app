@@ -1,22 +1,15 @@
 <h1>{{ thread.title }}</h1>
 <hr>
-<div><b>{{ thread.username }}</b></div>
+{% for message in messages %}
+<div><b>{{ message.username }}</b></div>
 <p>
-    {{ thread.content }}
-</p>
-
-<hr>
-<hr>
-{% for reply in replies %}
-<div><b>{{ reply.username }}</b></div>
-<p>
-    {{ reply.content }}
+    {{ message.content }}
 </p>
 <hr>
 {% endfor %}
 
 {% if session.user_id %}
-<form action="/topic/{{ topic_id }}/thread/{{ thread_id }}/createreply" method="POST">
+<form action="/topic/{{ topic_id }}/thread/{{ thread_id }}/createmessage" method="POST">
     <p>
         Reply:<br>
         <textarea name="content" rows="8" cols="60"></textarea>

@@ -9,7 +9,7 @@
     <hr>
     {% for thread in threads %}
     <a href="/topic/{{ id }}/thread/{{ thread[0] }}">{{ thread[1] }}</a><br>
-    Replies: {{ thread.reply_count }}
+    Messages: {{ thread.message_count }}
     <hr>
     {% endfor %}
 </div>

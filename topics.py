@@ -2,10 +2,10 @@ from db import db
 from sqlalchemy.sql import text
 
 def get_list():
-    sql = text("SELECT O.id, O.title, COUNT(DISTINCT H.id) thread_count, COUNT(R.id) reply_count "\
+    sql = text("SELECT O.id, O.title, COUNT(DISTINCT H.id) thread_count, COUNT(M.id) message_count "\
                 "FROM topics O "\
                 "LEFT JOIN threads H ON O.id=H.topic_id "\
-                "LEFT JOIN replies R ON H.id=R.thread_id "\
+                "LEFT JOIN messages M ON H.id=M.thread_id "\
                 "GROUP BY O.id "\
                 "ORDER BY O.id")
     result = db.session.execute(sql)

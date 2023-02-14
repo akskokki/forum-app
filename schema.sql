@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS topics CASCADE;
 DROP TABLE IF EXISTS threads CASCADE;
-DROP TABLE IF EXISTS replies CASCADE;
+DROP TABLE IF EXISTS messages CASCADE;
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY, 
@@ -19,13 +19,12 @@ CREATE TABLE topics (
 CREATE TABLE threads (
     id SERIAL PRIMARY KEY,
     title TEXT,
-    content TEXT,
     topic_id INTEGER REFERENCES topics,
     user_id INTEGER REFERENCES users,
     time TIMESTAMP
 );
 
-CREATE TABLE replies (
+CREATE TABLE messages (
     id SERIAL PRIMARY KEY,
     content TEXT,
     thread_id INTEGER REFERENCES threads,

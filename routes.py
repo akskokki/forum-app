@@ -1,7 +1,7 @@
 from app import app
 from flask import redirect, render_template, request, url_for
 from os import getenv
-import users, topics, threads, replies
+import users, topics, threads, messages
 
 app.secret_key = getenv("SECRET_KEY")
 
@@ -57,7 +57,7 @@ def createtopic():
     if request.method == "POST":
         title = request.form["title"]
         topics.create(title)
-        return redirect("/")
+        return redirect("")
     
 @app.route("/topic/<int:id>")
 def topic(id):
@@ -83,14 +83,14 @@ def createthread(topic_id):
 @app.route("/topic/<int:topic_id>/thread/<thread_id>")
 def thread(topic_id, thread_id):
     thread = threads.find_by_id(thread_id)
-    replies_list = replies.get_list(thread_id)
-    return render_template("thread.html", thread_id=thread_id, topic_id=topic_id, thread=thread, replies=replies_list)
+    messages_list = messages.get_list(thread_id)
+    return render_template("thread.html", thread_id=thread_id, topic_id=topic_id, thread=thread, messages=messages_list)
 
 
-@app.route("/topic/<int:topic_id>/thread/<int:thread_id>/createreply", methods=["POST"])
-def createreply(topic_id, thread_id):
+@app.route("/topic/<int:topic_id>/thread/<int:thread_id>/createmessage", methods=["POST"])
+def createmessage(topic_id, thread_id):
     content = request.form["content"]
-    replies.create(thread_id, content)
+    messages.create(thread_id, content)
     return redirect(f"/topic/{topic_id}/thread/{thread_id}")
 
 @app.route("/noperms")
