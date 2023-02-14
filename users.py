@@ -6,7 +6,8 @@ from os import getenv
 
 def create(username, password):
     try:
-        sql = text("INSERT INTO users (username, password, admin) VALUES (:username, :password, :admin)")
+        sql = text("INSERT INTO users (username, password, admin)"\
+                   " VALUES (:username, :password, :admin)")
         db.session.execute(sql, {
             "username": username, 
             "password": generate_password_hash(password), 
@@ -18,7 +19,7 @@ def create(username, password):
     return True
 
 def login(username, password):
-    sql = text("SELECT id, password FROM users WHERE username=:username")
+    sql = text("SELECT id, password, admin FROM users WHERE username=:username")
     result = db.session.execute(sql, {"username":username})
     user = result.fetchone()
     if not user:
@@ -27,6 +28,7 @@ def login(username, password):
         if check_password_hash(user.password, password):
             session["user_id"] = user.id
             session["username"] = username
+            session["admin"] = user.admin
             return True
         else:
             return False
