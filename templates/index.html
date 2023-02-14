@@ -32,7 +32,7 @@
     {% for topic in topic_list %}
     <a href="topic/{{ topic[0] }}">{{ topic[1] }}</a><br>
     Threads: {{ topic.thread_count }}<br>
-    Replies: {{ topic.reply_count }}
+    Messages: {{ topic.message_count }}
     <hr>
     {% endfor %}
 </div>
