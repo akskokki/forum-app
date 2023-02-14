@@ -2,11 +2,16 @@ from db import db
 from flask import session
 from werkzeug.security import check_password_hash, generate_password_hash
 from sqlalchemy.sql import text
+from os import getenv
 
 def create(username, password):
     try:
-        sql = text("INSERT INTO users (username, password) VALUES (:username, :password)")
-        db.session.execute(sql, {"username": username, "password": generate_password_hash(password)})
+        sql = text("INSERT INTO users (username, password, admin) VALUES (:username, :password, :admin)")
+        db.session.execute(sql, {
+            "username": username, 
+            "password": generate_password_hash(password), 
+            "admin": username == getenv("ADMIN_USERNAME")
+        })
         db.session.commit()
     except:
         return False

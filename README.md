@@ -7,6 +7,7 @@ Kloonaa tämä repositorio omalle koneellesi ja siirry sen juurikansioon. Luo ka
 ```
 DATABASE_URL=<tietokannan-paikallinen-osoite>
 SECRET_KEY=<salainen-avain>
+ADMIN_USERNAME=<ylläpitäjän-käyttäjänimi>
 ```
 
 Seuraavaksi aktivoi virtuaaliympäristö ja asenna sovelluksen riippuvuudet komennoilla
@@ -28,6 +29,8 @@ Nyt voit käynnistää sovelluksen komennolla
 ```
 $ flask run
 ```
+
+Ylläpitäjä-tili luodaan samalla tavalla kuin tavallinen käyttäjä; tili saa ylläpitäjä-oikeudet kunhan käyttäjätunnus on sama kuin .env-tiedostoon kirjattu.
 
 ## Sovelluksen tämänhetkinen tila
 Valmiit ominaisuudet:

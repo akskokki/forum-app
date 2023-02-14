@@ -43,7 +43,7 @@ def createuser():
             users.login(username, password)
             return redirect(url_for(".index", notification="User created successfully"))
         else:
-            return redirect(url_for(".createuser.html", notification="Username is taken", username=username))
+            return redirect(url_for(".createuser", notification="Username is taken", username=username))
 
 @app.route("/logout")
 def logout():
