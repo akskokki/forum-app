@@ -1,43 +1,46 @@
-{% if notification %}
-<p>{{ notification }}</p>
-{% endif %}
+{% extends "layout.html" %}
+{% block title %}Topics{% endblock %}
+{% block content %}
+    <div class="container py-3">
+        <div class="row">
+            <div class="col-9 h2">
+                Topics
+            </div>
+            {% if session.admin %}
+                <div class="col-3">
+                    <div class="d-grid justify-content-md-end">
+                        <a class="btn btn-outline-primary" href="/createtopic">New topic</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
 
-{% if session.username %}
-<p>
-    Currently logged in as {{ session.username }}<br>
-    <a href="/logout">Log out</a>
-</p>
-{% else %}
-<form action="/login" method="POST">
-    <p>
-        Username:<br>
-        <input type="text" name="username" value={{ username or "" }}>
-    </p>
-    <p>
-        Password:<br>
-        <input type="password" name="password">
-    </p>
-    <input type="submit" value="Log in">
-</form>
-<p><a href="/createuser">Create new user</a></p>
-{% endif %}
+        <div class="row py-2 border-bottom fs-5 fw-bold">
+            <div class="col-5">Topic</div>
+            <div class="col-2">Threads</div>
+            <div class="col-2">Messages</div>
+            <div class="col-3">Latest message</div>
+        </div>
 
-{% if session.admin %}
-<p><a href="/createtopic">Create new topic</a></p>
-{% endif %}
-
-<div>
-    <h2>Topics:</h2>
-    <hr>
-    {% for topic in topic_list %}
-    <a href="topic/{{ topic.id }}">{{ topic.title }}</a><br>
-    Threads: {{ topic.thread_count or 0 }}<br>
-    Messages: {{ topic.message_count or 0 }}<br>
-    {% if topic.latest_time %}
-    Latest message on {{ topic.latest_time.strftime("%Y-%m-%d, %H:%M:%S") }}
-    in <a href="topic/{{ topic.id }}/thread/{{ topic.latest_id }}">{{ topic.latest_title }}</a>
-    from {{ topic.latest_user }}
-    {% endif %}
-    <hr>
-    {% endfor %}
-</div>
+        {% for topic in topic_list %}
+            <div class="row bg-light border-bottom py-1 align-items-center">
+                <div class="col-5 fs-5">
+                    <a href="topic/{{ topic.id }}" class="text-decoration-none">{{ topic.title }}</a><br>    
+                </div>
+                <div class="col-2">
+                    {{ topic.thread_count or 0 }}
+                </div>
+                <div class="col-2">
+                    {{ topic.message_count or 0 }}
+                </div>
+                <div class="col-3">
+                    {% if topic.latest_time %}
+                        {{ topic.latest_time.strftime("%Y-%m-%d, %H:%M:%S") }}<br>
+                        in <a href="topic/{{ topic.id }}/thread/{{ topic.latest_id }}">{{ topic.latest_title }}</a><br>
+                        by {{ topic.latest_user }}
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

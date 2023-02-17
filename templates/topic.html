@@ -1,19 +1,41 @@
-<h1>Topic: {{ title }}</h1>
+{% extends "layout.html" %}
+{% block title %}{{ topic.title }}{% endblock %}
+{% block content %}
+    <div class="container py-3">
+        <div class="row">
+            <div class="col-9 h2">
+                <a href="/topic/{{ topic.id }}" class="text-decoration-none">{{ topic.title }}</a>
+            </div>
+            {% if session.user_id %}
+                <div class="col-3">
+                    <div class="d-grid justify-content-md-end">
+                        <a class="btn btn-outline-primary" href="/topic/{{ topic.id }}/createthread">New thread</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
 
-{% if session.user_id %}
-<a href="/topic/{{ id }}/createthread">Create new thread</a>
-{% endif %}
+        <div class="row py-2 border-bottom fs-5 fw-bold">
+            <div class="col-7">Thread</div>
+            <div class="col-2">Messages</div>
+            <div class="col-3">Latest message</div>
+        </div>
 
-<div>
-    <h2>Threads:</h2>
-    <hr>
-    {% for thread in threads %}
-    <a href="/topic/{{ id }}/thread/{{ thread.id }}">{{ thread.title }}</a><br>
-    Messages: {{ thread.message_count }}<br>
-    Latest message on {{ thread.latest_time.strftime("%Y-%m-%d, %H:%M:%S") }}
-    by {{ thread.latest_user }}
-    <hr>
-    {% endfor %}
-</div>
-<br>
-<a href="/">Return</a>
+        {% for thread in threads %}
+            <div class="row bg-light border-bottom py-1 align-items-center">
+                <div class="d-grid col-7 fs-5">
+                    <a href="/topic/{{ topic.id }}/thread/{{ thread.id }}" class="text-decoration-none">{{ thread.title }}</a>
+                </div>
+                <div class="col-2">
+                    {{ thread.message_count or 0 }}
+                </div>
+                <div class="col-3">
+                    {% if thread.latest_time %}
+                        {{ thread.latest_time.strftime("%Y-%m-%d, %H:%M:%S") }}<br>
+                        by {{ thread.latest_user }}
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

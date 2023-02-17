@@ -1,26 +1,60 @@
-<h1>{{ thread.title }}</h1>
-<hr>
+{% extends "layout.html" %}
+{% block title %}{{ thread.title }}{% endblock %}
+{% block content %}
+    <div class="container py-3">
+        <div class="row">
+            <div class="col-9 h2">
+                <a href="/topic/{{ topic.id }}" class="text-decoration-none">{{ topic.title }}</a>
+            </div>
+        </div>
 
-{% for message in messages %}
-<div><b>{{ message.username }}</b></div>
-<div><i>{{ message.time.strftime("%Y-%m-%d, %H:%M:%S") }}</i></div>
-<p>
-    {{ message.content }}
-</p>
-<hr>
-{% endfor %}
+        <div class="row">
+            <div class="col-12 h1 py-3">
+                {{ thread.title }}
+            </div>
+        </div>
 
-{% if session.user_id %}
-<form action="/topic/{{ topic_id }}/thread/{{ thread_id }}/createmessage" method="POST">
-    <p>
-        Reply:<br>
-        <textarea name="content" rows="8" cols="60"></textarea>
-    </p>
-    <input type="submit" value="Create reply">
-</form>
-{% endif %}
+        {% for message in messages %}
+            {% if message.username == thread.username %}
+            <div class="container border rounded bg-primary bg-opacity-10">
+            {% else %}
+            <div class="container border rounded bg-light">
+            {% endif %}
+                <div class="row border-bottom">
+                    <div class="col-8 fw-bold fs-5">
+                        {{ message.username }}
+                    </div>
+                    <div class="col-4 fw-light">
+                        <div class="d-grid justify-content-md-end">
+                            {{ message.time.strftime("%Y-%m-%d, %H:%M:%S") }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 py-2">
+                        {{ message.content }}
+                    </div>
+                </div>
+            </div>
+            <br>
+        {% endfor %}
 
-<br>
-<div><a href="/topic/{{ topic_id }}">Return to topic</a></div>
-<br>
-<div><a href="/">Return to front page</a></div>
+        {% if session.user_id %}
+            <form action="/topic/{{ topic.id }}/thread/{{ thread.id }}/createmessage" method="POST">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-floating">
+                            <textarea class="form-control" name="content" id="replyTextarea" placeholder="Reply" style="height: 150px"></textarea>
+                            <label for="replyTextarea">Reply</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row py-3">
+                    <div class="d-grid justify-content-md-end">
+                        <button type="submit" class="btn btn-outline-primary">Send reply</button>
+                    </div>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}

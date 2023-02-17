@@ -1,19 +1,35 @@
-<h2>Creating thread in topic: {{ topic_title }}</h2>
-
-{% if notification %}
-<p>{{ notification }}</p>
-{% endif %}
-
-<form action="/topic/{{ topic_id }}/createthread" method="POST">
-    <p>
-        Thread title:<br>
-        <input type="text" name="title">
-    </p>
-    <p>
-        Content:<br>
-        <textarea name="content" rows="8" cols="60"></textarea>
-    </p>
-    <input type="submit" value="Create thread">
-</form>
-
-<a href="/topic/{{ topic_id }}">Return</a>
+{% extends "layout.html" %}
+{% block title %}Create thread{% endblock %}
+{% block content %}
+    <div class="container py-3">
+        <div style="width: 620px">
+            <div class="row">
+                <div class="col-12 h2">
+                    Creating thread in topic: {{ topic.title }}
+                </div>
+            </div>
+            <form action="/topic/{{ topic.id }}/createthread" method="POST">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" name="title" id="title" placeholder="Title" style="width: 600px">
+                            <label for="title">Title</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-floating">
+                            <textarea class="form-control" name="content" id="content" placeholder="Content" style="height: 150px; width: 600px"></textarea>
+                            <label for="content">Content</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row py-3">
+                    <div class="d-grid justify-content-md-end">
+                        <button type="submit" class="btn btn-outline-primary">Create thread</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

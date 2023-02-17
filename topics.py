@@ -29,7 +29,7 @@ def get_list():
     return result.fetchall()
 
 def find_by_id(id):
-    sql = text("SELECT title FROM topics WHERE id=:id")
+    sql = text("SELECT id, title FROM topics WHERE id=:id")
     result = db.session.execute(sql, {"id": id})
     return result.fetchone()
 

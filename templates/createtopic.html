@@ -1,13 +1,27 @@
-{% if notification %}
-<p>{{ notification }}</p>
-{% endif %}
-
-<form action="/createtopic" method="POST">
-    <p>
-        New topic title:<br>
-        <input type="text" name="title">
-    </p>
-    <input type="submit" value="Create topic">
-</form>
-
-<a href="/">Return</a>
+{% extends "layout.html" %}
+{% block title %}Create topic{% endblock %}
+{% block content %}
+    <div class="container py-3">
+        <div style="width: 620px">
+            <div class="row">
+                <div class="col-12 h2">
+                    Creating new topic
+                </div>
+            </div>
+            <form action="/createtopic" method="POST">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" name="title" id="title" placeholder="Topic title" style="width: 600px">
+                            <label for="title">Topic title</label>
+                    </div>
+                </div>
+                <div class="row py-3">
+                    <div class="d-grid justify-content-md-end">
+                        <button type="submit" class="btn btn-outline-primary">Create topic</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,5 +1,5 @@
 from app import app
-from flask import redirect, render_template, request, url_for
+from flask import redirect, render_template, request, url_for, session
 from os import getenv
 import users, topics, threads, messages
 
@@ -16,14 +16,21 @@ def index():
     username = check_args("username")
     return render_template("index.html", topic_list=topics.get_list(), notification=notification, username=username)
 
-@app.route("/login", methods=["POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    username = request.form["username"]
-    password = request.form["password"]
-    if users.login(username, password):
-        return redirect("/")
-    else:
-        return redirect(url_for(".index", notification="Invalid username or password", username=username))
+    if request.method == "GET":
+        username = check_args("username")
+        notification = check_args("notification")
+        return render_template("login.html", notification=notification, username=username)
+    if request.method == "POST":
+        if users.user_id():
+            return redirect("/")
+        username = request.form["username"]
+        password = request.form["password"]
+        if users.login(username, password):
+            return redirect("/")
+        else:
+            return redirect(url_for(".login", notification="Invalid username or password", username=username))
 
 @app.route("/createuser", methods=["GET", "POST"])
 def createuser():
@@ -32,6 +39,8 @@ def createuser():
         username = check_args("username")
         return render_template("createuser.html", notification=notification, username=username)
     if request.method == "POST":
+        if users.user_id():
+            return redirect("/")
         username = request.form["username"]
         password = request.form["password"]
         password_retype = request.form["password_retype"]
@@ -52,25 +61,27 @@ def logout():
 
 @app.route("/createtopic", methods=["GET", "POST"])
 def createtopic():
+    if not users.admin():
+        return redirect("/noperms")
     if request.method == "GET":
         return render_template("createtopic.html")
     if request.method == "POST":
         title = request.form["title"]
         topics.create(title)
-        return redirect("")
+        return redirect("/")
     
 @app.route("/topic/<int:id>")
 def topic(id):
     topic = topics.find_by_id(id)
     thread_list = threads.get_list(id)
-    return render_template("topic.html", id=id, title=topic[0], threads=thread_list)
+    return render_template("topic.html", topic=topic, threads=thread_list)
 
 @app.route("/topic/<int:topic_id>/createthread", methods=["GET", "POST"])
 def createthread(topic_id):
     topic = topics.find_by_id(topic_id)
     if request.method == "GET":
         notification = check_args('notification')
-        return render_template("createthread.html", topic_id=topic_id, topic_title=topic[0], notification=notification)
+        return render_template("createthread.html", topic=topic, notification=notification)
     if request.method == "POST":
         title = request.form["title"]
         content = request.form["content"]
@@ -82,16 +93,15 @@ def createthread(topic_id):
 
 @app.route("/topic/<int:topic_id>/thread/<thread_id>")
 def thread(topic_id, thread_id):
+    topic = topics.find_by_id(topic_id)
     thread = threads.find_by_id(thread_id)
     messages_list = messages.get_list(thread_id)
-    for message in messages_list:
-        print(message.time)
-        print(type(message.time))
-    return render_template("thread.html", thread_id=thread_id, topic_id=topic_id, thread=thread, messages=messages_list)
-
+    return render_template("thread.html", topic=topic, thread=thread, messages=messages_list)
 
 @app.route("/topic/<int:topic_id>/thread/<int:thread_id>/createmessage", methods=["POST"])
 def createmessage(topic_id, thread_id):
+    if users.user_id == 0:
+        redirect("/noperms")
     content = request.form["content"]
     messages.create(thread_id, content)
     return redirect(f"/topic/{topic_id}/thread/{thread_id}")

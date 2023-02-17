@@ -22,7 +22,7 @@ def get_list(topic_id):
     return result.fetchall()
 
 def find_by_id(id):
-    sql = text("SELECT T.title, U.username"\
+    sql = text("SELECT T.id, T.title, U.username"\
                " FROM threads T, users U"\
                " WHERE T.id=:id AND U.id=T.user_id")
     result = db.session.execute(sql, {"id": id})
