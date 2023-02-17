@@ -78,6 +78,8 @@ def topic(id):
 
 @app.route("/topic/<int:topic_id>/createthread", methods=["GET", "POST"])
 def createthread(topic_id):
+    if users.user_id() == 0:
+        redirect("/noperms")
     topic = topics.find_by_id(topic_id)
     if request.method == "GET":
         notification = check_args('notification')
@@ -100,7 +102,7 @@ def thread(topic_id, thread_id):
 
 @app.route("/topic/<int:topic_id>/thread/<int:thread_id>/createmessage", methods=["POST"])
 def createmessage(topic_id, thread_id):
-    if users.user_id == 0:
+    if users.user_id() == 0:
         redirect("/noperms")
     content = request.form["content"]
     messages.create(thread_id, content)
