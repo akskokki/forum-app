@@ -31,9 +31,33 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 py-2">
+                    <div class="col-8 py-2">
                         {{ message.content }}
                     </div>
+                {% if message.username == session.username %}
+                    <div class="col-4 py-3">
+                        <div class="d-grid justify-content-md-end">
+                            <div class="btn-group" role="group">
+                                <button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#edit_{{ message.id }}">Edit</button>
+                                <button class="btn btn-outline-secondary">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="collapse" id="edit_{{ message.id }}">
+                        <form action="/topic/{{ topic.id }}/thread/{{ thread.id }}/editmessage/{{ message.id }}" method="POST">
+                            <div class="row">
+                                <div class="col-12">
+                                    <textarea class="form-control" name="new_content" id="edit_{{message.id}}_Textarea" style="height: 150px">{{ message.content }}</textarea>
+                                </div>
+                            </div>
+                            <div class="row py-3">
+                                <div class="d-grid justify-content-md-end">
+                                    <button type="submit" class="btn btn-outline-primary">Confirm edit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                {% endif %}
                 </div>
             </div>
             <br>

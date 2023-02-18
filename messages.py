@@ -23,3 +23,10 @@ def create(thread_id, content):
     })
     db.session.commit()
     return True
+
+def edit(message_id, new_content):
+    user_id = users.user_id()
+    sql = text("UPDATE messages SET content=:new_content WHERE user_id=:user_id AND id=:message_id RETURNING id")
+    result = db.session.execute(sql, {"message_id": message_id, "user_id": user_id, "new_content": new_content})
+    db.session.commit()
+    return len(result.fetchone())
