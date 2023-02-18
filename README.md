@@ -35,16 +35,18 @@ Ylläpitäjä-tili luodaan samalla tavalla kuin tavallinen käyttäjä; tili saa
 ## Sovelluksen tämänhetkinen tila
 Valmiit ominaisuudet:
 - Käyttäjä voi kirjautua sisään ja ulos sekä luoda uuden tunnuksen
-- Kaikki käyttäjät voivat luoda uusia alueita (topic), ketjuja (thread) sekä vastauksia ketjuihin (reply)
-- UI toteutettu alkeellisella tasolla
+  - Ylläpitäjän luominen onnistuu .env-tiedoston avulla
+- Ylläpitäjä voi luoda alueita, ja kaikki käyttäjät uusia ketjuja alueiden sisällä
+- Aluelistalla näkyy niiden sisältämät ketju- ja viestimäärät, sekä uusimman viestin tiedot
+  - Ketjulistalla näkyy samoin ketjun viestimäärä ja uusin viesti
+- Kaikki käyttäjät voivat lisätä ketjuihin uusia viestejä
+  - Ketjun aloittajan viestit ovat sinisellä korostettuja
+  - Ketjua sekä viestejä voivat niiden omistajat muokata sekä poistaa ketjunäkymässä
+- UI toteutettu bootstrapilla
 
-Keskeneräistä:
-- Käyttäjien nimimerkkien haku ketjujen ja vastausten yhteydessä
-- Alueiden ja ketjujen listauksen lisätiedot
-- Alueiden luomisen lukitseminen vain ylläpitäjien oikeudeksi
-- Alueiden, ketjujen ja vastausten poistaminen ja niihin liittyvät oikeudet
-- Salaiset alueet
-- UI:n kaunistaminen
+Puuttuvat ominaisuudet:
+- Viestihaku
+- Salaiset alueet (uusi tietokantataulu tätä varten)
 
 ## Täysi vaatimusmäärittely
 
