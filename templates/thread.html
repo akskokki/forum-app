@@ -9,16 +9,16 @@
         </div>
 
         <div class="row">
-            <div class="col-12 h1 py-3">
+            <div class="col-12 h1 py-3" style="overflow-wrap:break-word">
                 {{ thread.title }}
             </div>
         </div>
 
         {% for message in messages %}
             {% if message.username == thread.username %}
-            <div class="container border rounded bg-primary bg-opacity-10">
+            <div class="container border rounded bg-primary bg-opacity-10 mb-3">
             {% else %}
-            <div class="container border rounded bg-light">
+            <div class="container border rounded bg-light mb-3">
             {% endif %}
                 <div class="row border-bottom">
                     <div class="col-8 fw-bold fs-5">
@@ -31,7 +31,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-8 py-2">
+                    <div class="col-8 py-2" style="overflow-wrap:break-word">
                         {{ message.content }}
                     </div>
                 {% if message.username == session.username %}
@@ -39,8 +39,23 @@
                         <div class="d-grid justify-content-md-end">
                             <div class="btn-group" role="group">
                                 <button class="btn btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#edit_{{ message.id }}">Edit</button>
-                                <button class="btn btn-outline-secondary">Remove</button>
+                                <button class="btn btn-outline-danger" type="button" data-bs-toggle="collapse" data-bs-target="#remove_{{ message.id }}">Remove</button>
                             </div>
+                        </div>
+                        <div class="collapse" id="remove_{{ message.id }}">
+                            {% if loop.index == 1 %}
+                                <form action="/topic/{{ topic.id }}/thread/{{ thread.id }}/removethread" method="POST">
+                                    <div class="d-grid justify-content-md-end pt-2">
+                                        <button type="submit" class="btn btn-danger">Remove thread</button>
+                                    </div>
+                                </form>
+                            {% else %}
+                                <form action="/topic/{{ topic.id }}/thread/{{ thread.id }}/removemessage/{{ message.id }}" method="POST">
+                                    <div class="d-grid justify-content-md-end pt-2">
+                                        <button type="submit" class="btn btn-danger">Remove message</button>
+                                    </div>
+                                </form>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="collapse" id="edit_{{ message.id }}">
@@ -60,7 +75,6 @@
                 {% endif %}
                 </div>
             </div>
-            <br>
         {% endfor %}
 
         {% if session.user_id %}

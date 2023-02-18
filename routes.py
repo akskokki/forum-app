@@ -70,11 +70,12 @@ def createtopic():
         topics.create(title)
         return redirect("/")
     
-@app.route("/topic/<int:id>")
-def topic(id):
-    topic = topics.find_by_id(id)
-    thread_list = threads.get_list(id)
-    return render_template("topic.html", topic=topic, threads=thread_list)
+@app.route("/topic/<int:topic_id>")
+def topic(topic_id):
+    notification = check_args("notification")
+    topic = topics.find_by_id(topic_id)
+    thread_list = threads.get_list(topic_id)
+    return render_template("topic.html", notification=notification, topic=topic, threads=thread_list)
 
 @app.route("/topic/<int:topic_id>/createthread", methods=["GET", "POST"])
 def createthread(topic_id):
@@ -114,6 +115,16 @@ def editmessage(topic_id, thread_id, message_id):
     if messages.edit(message_id, new_content):
         return redirect(f"/topic/{topic_id}/thread/{thread_id}")
     return redirect("/noperms")
+
+@app.route("/topic/<int:topic_id>/thread/<int:thread_id>/removethread", methods=["POST"])
+def removethread(topic_id, thread_id):
+    threads.remove(thread_id)
+    return redirect(url_for("topic", topic_id=topic_id, notification="Thread removed"))
+
+@app.route("/topic/<int:topic_id>/thread/<int:thread_id>/removemessage/<int:message_id>", methods=["POST"])
+def removemessage(topic_id, thread_id, message_id):
+    messages.remove(message_id)
+    return redirect(f"/topic/{topic_id}/thread/{thread_id}")
 
 @app.route("/noperms")
 def noperms():

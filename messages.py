@@ -30,3 +30,9 @@ def edit(message_id, new_content):
     result = db.session.execute(sql, {"message_id": message_id, "user_id": user_id, "new_content": new_content})
     db.session.commit()
     return len(result.fetchone())
+
+def remove(message_id):
+    user_id = users.user_id()
+    sql = text("DELETE FROM messages WHERE id=:message_id AND user_id=:user_id")
+    db.session.execute(sql, {"message_id": message_id, "user_id": user_id})
+    db.session.commit()

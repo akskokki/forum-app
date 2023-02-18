@@ -44,3 +44,9 @@ def create(topic_id, title, content):
     db.session.commit()
     messages.create(thread_id, content)
     return thread_id
+
+def remove(thread_id):
+    user_id = users.user_id()
+    sql = text("DELETE FROM threads CASCADE WHERE user_id=:user_id AND id=:thread_id")
+    db.session.execute(sql, {"user_id": user_id, "thread_id": thread_id})
+    db.session.commit()
