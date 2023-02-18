@@ -59,18 +59,44 @@
                         </div>
                     </div>
                     <div class="collapse" id="edit_{{ message.id }}">
-                        <form action="/topic/{{ topic.id }}/thread/{{ thread.id }}/editmessage/{{ message.id }}" method="POST">
-                            <div class="row">
-                                <div class="col-12">
-                                    <textarea class="form-control" name="new_content" id="edit_{{message.id}}_Textarea" style="height: 150px">{{ message.content }}</textarea>
+                        {% if loop.index == 1 %}
+                            <form action="/topic/{{ topic.id }}/thread/{{ thread.id }}/editthread/{{ message.id }}" method="POST">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" name="title" id="title" placeholder="Title" style="width: 500px" value={{ thread.title }}>
+                                            <label for="title">Title</label>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row py-3">
-                                <div class="d-grid justify-content-md-end">
-                                    <button type="submit" class="btn btn-outline-primary">Confirm edit</button>
+                                <div class="row">
+                                    <div class="col-12 mt-2">
+                                        <div class="form-floating">
+                                            <textarea class="form-control" name="content" id="content" placeholder="Content" style="height: 150px">{{ message.content }}</textarea>
+                                            <label for="content">Content</label>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </form>
+                                <div class="row py-3">
+                                    <div class="d-grid justify-content-md-end">
+                                        <button type="submit" class="btn btn-outline-primary">Confirm edit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        {% else %}
+                            <form action="/topic/{{ topic.id }}/thread/{{ thread.id }}/editmessage/{{ message.id }}" method="POST">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <textarea class="form-control" name="new_content" id="edit_{{message.id}}_Textarea" style="height: 150px">{{ message.content }}</textarea>
+                                    </div>
+                                </div>
+                                <div class="row py-3">
+                                    <div class="d-grid justify-content-md-end">
+                                        <button type="submit" class="btn btn-outline-success">Confirm edit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        {% endif %}
                     </div>
                 {% endif %}
                 </div>

@@ -109,12 +109,22 @@ def createmessage(topic_id, thread_id):
     messages.create(thread_id, content)
     return redirect(f"/topic/{topic_id}/thread/{thread_id}")
 
+@app.route("/topic/<int:topic_id>/thread/<int:thread_id>/editthread/<int:message_id>", methods=["POST"])
+def editthread(topic_id, thread_id, message_id):
+    new_title = request.form["title"]
+    new_content = request.form["content"]
+    if not threads.edit(thread_id, new_title):
+        return redirect("/noperms")
+    if not messages.edit(message_id, new_content):
+        return redirect("/noperms")
+    return redirect(f"/topic/{topic_id}/thread/{thread_id}")
+
 @app.route("/topic/<int:topic_id>/thread/<int:thread_id>/editmessage/<int:message_id>", methods=["POST"])
 def editmessage(topic_id, thread_id, message_id):
     new_content = request.form["new_content"]
-    if messages.edit(message_id, new_content):
-        return redirect(f"/topic/{topic_id}/thread/{thread_id}")
-    return redirect("/noperms")
+    if not messages.edit(message_id, new_content):
+        return redirect("/noperms")
+    return redirect(f"/topic/{topic_id}/thread/{thread_id}")
 
 @app.route("/topic/<int:topic_id>/thread/<int:thread_id>/removethread", methods=["POST"])
 def removethread(topic_id, thread_id):

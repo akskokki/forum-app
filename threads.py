@@ -45,6 +45,13 @@ def create(topic_id, title, content):
     messages.create(thread_id, content)
     return thread_id
 
+def edit(thread_id, new_title):
+    user_id = users.user_id()
+    sql = text("UPDATE threads SET title=:new_title WHERE user_id=:user_id AND id=:thread_id RETURNING id")
+    result = db.session.execute(sql, {"thread_id": thread_id, "user_id": user_id, "new_title": new_title})
+    db.session.commit()
+    return len(result.fetchone())
+
 def remove(thread_id):
     user_id = users.user_id()
     sql = text("DELETE FROM threads CASCADE WHERE user_id=:user_id AND id=:thread_id")
