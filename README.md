@@ -1,5 +1,11 @@
 # forum-app
 
+## Testaus
+
+Sovelluksen tuotantoversiota voi testata osoitteessa [https://forum-ak.fly.dev/](https://forum-ak.fly.dev/). Ylläpitäjätoimintoja voi testata ylläpitäjätilillä admin, jonka salasana on admin.
+
+Kehitysversion voi asentaa käynnistysohjeita seuraamalla.
+
 ## Käynnistysohjeet
 
 Kloonaa tämä repositorio omalle koneellesi ja siirry sen juurikansioon. Luo kansioon .env-tiedosto ja määritä sen sisältö seuraavanlaiseksi:
