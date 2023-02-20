@@ -2,7 +2,7 @@
 
 ## Testaus
 
-Sovelluksen tuotantoversiota voi testata osoitteessa [https://forum-ak.fly.dev/](https://forum-ak.fly.dev/). Ylläpitäjätoimintoja voi testata ylläpitäjätilillä admin, jonka salasana on admin.
+Sovelluksen tuotantoversiota voi testata osoitteessa [https://forum-ak.fly.dev/](https://forum-ak.fly.dev/) (sivu pitää päivittää kerran että tietokantayhteys toimii). Ylläpitäjätoimintoja voi testata ylläpitäjätilillä admin, jonka salasana on admin.
 
 Kehitysversion voi asentaa käynnistysohjeita seuraamalla.
 
