@@ -66,6 +66,8 @@ def createtopic():
     if request.method == "GET":
         return render_template("createtopic.html")
     if request.method == "POST":
+        if session["csrf_token"] != request.form["csrf_token"]:
+            return redirect("/noperms")
         title = request.form["title"]
         topics.create(title)
         return redirect("/")
@@ -80,12 +82,14 @@ def topic(topic_id):
 @app.route("/topic/<int:topic_id>/createthread", methods=["GET", "POST"])
 def createthread(topic_id):
     if users.user_id() == 0:
-        redirect("/noperms")
+        return redirect("/noperms")
     topic = topics.find_by_id(topic_id)
     if request.method == "GET":
         notification = check_args('notification')
         return render_template("createthread.html", topic=topic, notification=notification)
     if request.method == "POST":
+        if session["csrf_token"] != request.form["csrf_token"]:
+            return redirect("/noperms")
         title = request.form["title"]
         content = request.form["content"]
         thread_id = threads.create(topic_id, title, content)
@@ -103,8 +107,8 @@ def thread(topic_id, thread_id):
 
 @app.route("/topic/<int:topic_id>/thread/<int:thread_id>/createmessage", methods=["POST"])
 def createmessage(topic_id, thread_id):
-    if users.user_id() == 0:
-        redirect("/noperms")
+    if users.user_id() == 0 or session["csrf_token"] != request.form["csrf_token"]:
+        return redirect("/noperms")
     content = request.form["content"]
     messages.create(thread_id, content)
     return redirect(f"/topic/{topic_id}/thread/{thread_id}")
@@ -113,6 +117,8 @@ def createmessage(topic_id, thread_id):
 def editthread(topic_id, thread_id, message_id):
     new_title = request.form["title"]
     new_content = request.form["content"]
+    if session["csrf_token"] != request.form["csrf_token"]:
+        return redirect("/noperms")
     if not threads.edit(thread_id, new_title):
         return redirect("/noperms")
     if not messages.edit(message_id, new_content):
@@ -121,6 +127,8 @@ def editthread(topic_id, thread_id, message_id):
 
 @app.route("/topic/<int:topic_id>/thread/<int:thread_id>/editmessage/<int:message_id>", methods=["POST"])
 def editmessage(topic_id, thread_id, message_id):
+    if session["csrf_token"] != request.form["csrf_token"]:
+        return redirect("/noperms")
     new_content = request.form["new_content"]
     if not messages.edit(message_id, new_content):
         return redirect("/noperms")
@@ -128,11 +136,15 @@ def editmessage(topic_id, thread_id, message_id):
 
 @app.route("/topic/<int:topic_id>/thread/<int:thread_id>/removethread", methods=["POST"])
 def removethread(topic_id, thread_id):
+    if session["csrf_token"] != request.form["csrf_token"]:
+        return redirect("/noperms")
     threads.remove(thread_id)
     return redirect(url_for("topic", topic_id=topic_id, notification="Thread removed"))
 
 @app.route("/topic/<int:topic_id>/thread/<int:thread_id>/removemessage/<int:message_id>", methods=["POST"])
 def removemessage(topic_id, thread_id, message_id):
+    if session["csrf_token"] != request.form["csrf_token"]:
+        return redirect("/noperms")
     messages.remove(message_id)
     return redirect(f"/topic/{topic_id}/thread/{thread_id}")
 

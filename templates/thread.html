@@ -48,12 +48,14 @@
                                     <div class="d-grid justify-content-md-end pt-2">
                                         <button type="submit" class="btn btn-danger">Remove thread</button>
                                     </div>
+                                    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                                 </form>
                             {% else %}
                                 <form action="/topic/{{ topic.id }}/thread/{{ thread.id }}/removemessage/{{ message.id }}" method="POST">
                                     <div class="d-grid justify-content-md-end pt-2">
                                         <button type="submit" class="btn btn-danger">Remove message</button>
                                     </div>
+                                    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                                 </form>
                             {% endif %}
                         </div>
@@ -82,6 +84,7 @@
                                         <button type="submit" class="btn btn-outline-primary">Confirm edit</button>
                                     </div>
                                 </div>
+                                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                             </form>
                         {% else %}
                             <form action="/topic/{{ topic.id }}/thread/{{ thread.id }}/editmessage/{{ message.id }}" method="POST">
@@ -95,6 +98,7 @@
                                         <button type="submit" class="btn btn-outline-primary">Confirm edit</button>
                                     </div>
                                 </div>
+                                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                             </form>
                         {% endif %}
                     </div>
@@ -118,6 +122,7 @@
                         <button type="submit" class="btn btn-outline-primary">Send reply</button>
                     </div>
                 </div>
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
             </form>
         {% endif %}
     </div>
