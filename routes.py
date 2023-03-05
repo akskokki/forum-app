@@ -124,11 +124,11 @@ def createtopic():
         if session["csrf_token"] != request.form["csrf_token"]:
             return redirect("/noperms")
         title = request.form["title"]
-        if len(title) < 3 or len(title) > 20:
+        if len(title) < 3 or len(title) > 32:
             return redirect(
                 url_for(
                     ".createtopic",
-                    notification="Topic title must be 3-20 characters long",
+                    notification="Topic title must be 3-32 characters long",
                     title=title))
         secret = False
         if "secret" in request.form:
@@ -175,8 +175,8 @@ def createthread(topic_id):
         title = request.form["title"]
         content = request.form["content"]
         notification = None
-        if len(title) < 3 or len(title) > 20:
-            notification = "Thread title must be 3-20 characters long"
+        if len(title) < 3 or len(title) > 32:
+            notification = "Thread title must be 3-32 characters long"
         if len(content) < 1 or len(content) > 500:
             notification = "Thread content must be 1-500 characters long"
         if notification:
