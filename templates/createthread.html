@@ -12,14 +12,15 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="form-floating">
-                            <input type="text" class="form-control" name="title" id="title" placeholder="Title" style="width: 600px">
+                            <input type="text" class="form-control" name="title" id="title" placeholder="Title" style="width: 600px" value="{{ title or '' }}">
                             <label for="title">Title</label>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12 mt-2">
                         <div class="form-floating">
-                            <textarea class="form-control" name="content" id="content" placeholder="Content" style="height: 150px; width: 600px"></textarea>
+                            <textarea class="form-control" name="content" id="content" placeholder="Content" style="height: 150px; width: 600px">{{ content or '' }}</textarea>
                             <label for="content">Content</label>
                         </div>
                     </div>

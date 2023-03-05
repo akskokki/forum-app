@@ -21,8 +21,7 @@ CREATE TABLE Threads (
     id SERIAL PRIMARY KEY,
     title TEXT,
     topic_id INTEGER REFERENCES Topics ON DELETE CASCADE,
-    user_id INTEGER REFERENCES Users,
-    time TIMESTAMP
+    user_id INTEGER REFERENCES Users
 );
 
 CREATE TABLE Messages (
@@ -36,5 +35,6 @@ CREATE TABLE Messages (
 CREATE TABLE SecretTopicUsers (
     id SERIAL PRIMARY KEY,
     topic_id INTEGER REFERENCES Topics ON DELETE CASCADE,
-    user_id INTEGER REFERENCES Users
+    user_id INTEGER REFERENCES Users,
+    CONSTRAINT no_duplicates UNIQUE (topic_id, user_id)
 );

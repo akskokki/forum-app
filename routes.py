@@ -65,17 +65,22 @@ def createuser():
         username = request.form["username"]
         password = request.form["password"]
         password_retype = request.form["password_retype"]
+        notification = None
         if len(username) < 1 or len(password) < 1:
-            return redirect(
-                url_for(
-                    ".createuser",
-                    notification="Username and password must not be blank",
-                    username=username))
+            notification = "Username and password must not be blank"
+        if len(username) > 16:
+            notification = "Username maximum length is 16 characters"
+        if len(password) < 4:
+            notification = "Password minimum length is 4 characters"
+        if len(password) > 64:
+            notification = "Password maximum length is 64 characters"
         if password != password_retype:
+            notification = "Passwords don't match"
+        if notification:
             return redirect(
                 url_for(
                     ".createuser",
-                    notification="Passwords don't match",
+                    notification=notification,
                     username=username))
         if users.create(username, password):
             users.login(username, password)
@@ -109,11 +114,22 @@ def createtopic():
     if not users.admin():
         return redirect("/noperms")
     if request.method == "GET":
-        return render_template("createtopic.html")
+        notification = check_args("notification")
+        title = check_args("title")
+        return render_template(
+            "createtopic.html",
+            notification=notification,
+            title=title)
     if request.method == "POST":
         if session["csrf_token"] != request.form["csrf_token"]:
             return redirect("/noperms")
         title = request.form["title"]
+        if len(title) < 3 or len(title) > 20:
+            return redirect(
+                url_for(
+                    ".createtopic",
+                    notification="Topic title must be 3-20 characters long",
+                    title=title))
         secret = False
         if "secret" in request.form:
             secret = True
@@ -126,7 +142,7 @@ def createtopic():
 def topic(topic_id):
     notification = check_args("notification")
     topic = topics.find_by_id(topic_id)
-    if topic == None:
+    if topic is None:
         return redirect("/noperms")
     thread_list = threads.get_list(topic_id)
     return render_template(
@@ -141,19 +157,36 @@ def createthread(topic_id):
     if users.user_id() == 0:
         return redirect("/noperms")
     topic = topics.find_by_id(topic_id)
-    if topic == None:
+    if topic is None:
         return redirect("/noperms")
     if request.method == "GET":
-        notification = check_args('notification')
+        notification = check_args("notification")
+        title = check_args("title")
+        content = check_args("content")
         return render_template(
             "createthread.html",
             topic=topic,
-            notification=notification)
+            notification=notification,
+            title=title,
+            content=content)
     if request.method == "POST":
         if session["csrf_token"] != request.form["csrf_token"]:
             return redirect("/noperms")
         title = request.form["title"]
         content = request.form["content"]
+        notification = None
+        if len(title) < 3 or len(title) > 20:
+            notification = "Thread title must be 3-20 characters long"
+        if len(content) < 1 or len(content) > 500:
+            notification = "Thread content must be 1-500 characters long"
+        if notification:
+            return redirect(
+                url_for(
+                    ".createthread",
+                    notification=notification,
+                    topic_id=topic_id,
+                    title=title,
+                    content=content))
         thread_id = threads.create(topic_id, title, content)
         if thread_id == 0:
             return redirect("/noperms")
@@ -164,15 +197,19 @@ def createthread(topic_id):
 @app.route("/topic/<int:topic_id>/thread/<thread_id>")
 def thread(topic_id, thread_id):
     topic = topics.find_by_id(topic_id)
-    if topic == None:
+    if topic is None:
         return redirect("/noperms")
     thread = threads.find_by_id(thread_id)
     messages_list = messages.get_list(thread_id)
+    notification = check_args("notification")
+    reply_content = check_args("reply_content")
     return render_template(
         "thread.html",
+        notification=notification,
         topic=topic,
         thread=thread,
-        messages=messages_list)
+        messages=messages_list,
+        reply_content=reply_content)
 
 
 @app.route("/topic/<int:topic_id>/thread/<int:thread_id>/createmessage",
@@ -181,9 +218,17 @@ def createmessage(topic_id, thread_id):
     if users.user_id() == 0 or session["csrf_token"] != request.form["csrf_token"]:
         return redirect("/noperms")
     topic = topics.find_by_id(topic_id)
-    if topic == None:
+    if topic is None:
         return redirect("/noperms")
     content = request.form["content"]
+    if len(content) < 1 or len(content) > 500:
+        return redirect(
+            url_for(
+                ".thread",
+                notification="Reply content must be 1-500 characters long",
+                topic_id=topic_id,
+                thread_id=thread_id,
+                reply_content=content))
     messages.create(thread_id, content)
     return redirect(f"/topic/{topic_id}/thread/{thread_id}")
 
@@ -243,9 +288,22 @@ def grantaccess(topic_id):
     username = request.form["username"]
     user_id = users.find_by_name(username)
     if user_id == 0:
-        return redirect(url_for(".topic", topic_id=topic_id, notification=f"User '{username}' not found"))
-    topics.add_secret_user(topic_id, user_id)
-    return redirect(url_for(".topic", topic_id=topic_id, notification=f"User '{username}' has been granted access"))
+        return redirect(
+            url_for(
+                ".topic",
+                topic_id=topic_id,
+                notification=f"User '{username}' not found"))
+    if topics.add_secret_user(topic_id, user_id):
+        return redirect(
+            url_for(
+                ".topic",
+                topic_id=topic_id,
+                notification=f"User '{username}' has been granted access"))
+    return redirect(
+        url_for(
+            ".topic",
+            topic_id=topic_id,
+            notification=f"User '{username}' already has access"))
 
 
 @app.route("/noperms")

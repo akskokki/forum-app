@@ -48,5 +48,9 @@ def create(title, secret):
 def add_secret_user(topic_id, user_id):
     sql = text("INSERT INTO SecretTopicUsers (topic_id, user_id)"
                " VALUES (:topic_id, :user_id)")
-    db.session.execute(sql, {"topic_id": topic_id, "user_id": user_id})
-    db.session.commit()
+    try:
+        db.session.execute(sql, {"topic_id": topic_id, "user_id": user_id})
+        db.session.commit()
+    except BaseException:
+        return False
+    return True

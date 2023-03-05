@@ -37,8 +37,8 @@ def create(topic_id, title, content):
     user_id = users.user_id()
     if user_id == 0:
         return 0
-    sql = text("INSERT INTO threads (title, topic_id, user_id, time)"
-               " VALUES (:title, :topic_id, :user_id, NOW())"
+    sql = text("INSERT INTO threads (title, topic_id, user_id)"
+               " VALUES (:title, :topic_id, :user_id)"
                " RETURNING id")
     result = db.session.execute(sql, {
         "title": title,
