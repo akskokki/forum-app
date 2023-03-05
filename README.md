@@ -49,12 +49,13 @@ Valmiit ominaisuudet:
   - Ketjun aloittajan viestit ovat sinisellä korostettuja
   - Ketjua sekä viestejä voivat niiden omistajat muokata sekä poistaa ketjunäkymässä
 - UI toteutettu bootstrapilla
+- Viestihaku löytää kaikki viestit, jotka sisältävät hakuun laitetun merkkijonon
+- Ylläpitäjä voi luoda salaisia alueita, ja lisätä käyttöliittymästä muille käyttäjille käyttöoikeuksia
 
 Puuttuvat ominaisuudet:
-- Viestihaku
-- Salaiset alueet (uusi tietokantataulu tätä varten)
+- Kaikki valmista!
 
-## Täysi vaatimusmäärittely
+## Täysi alkuperäinen vaatimusmäärittely
 
 Sovelluksessa näkyy keskustelualueita, joista jokaisella on tietty aihe. Alueilla on keskusteluketjuja, jotka muodostuvat viesteistä. Jokainen käyttäjä on peruskäyttäjä tai ylläpitäjä.
 
