@@ -1,33 +1,39 @@
-DROP TABLE IF EXISTS users CASCADE;
-DROP TABLE IF EXISTS topics CASCADE;
-DROP TABLE IF EXISTS threads CASCADE;
-DROP TABLE IF EXISTS messages CASCADE;
+DROP TABLE IF EXISTS Users CASCADE;
+DROP TABLE IF EXISTS Topics CASCADE;
+DROP TABLE IF EXISTS Threads CASCADE;
+DROP TABLE IF EXISTS Messages CASCADE;
 
-CREATE TABLE users (
+CREATE TABLE Users (
     id SERIAL PRIMARY KEY, 
     username TEXT UNIQUE, 
     password TEXT,
     admin BOOLEAN
 );
 
-CREATE TABLE topics (
+CREATE TABLE Topics (
     id SERIAL PRIMARY KEY,
     title TEXT UNIQUE,
-    description TEXT
+    secret BOOLEAN
 );
 
-CREATE TABLE threads (
+CREATE TABLE Threads (
     id SERIAL PRIMARY KEY,
     title TEXT,
-    topic_id INTEGER REFERENCES topics ON DELETE CASCADE,
-    user_id INTEGER REFERENCES users,
+    topic_id INTEGER REFERENCES Topics ON DELETE CASCADE,
+    user_id INTEGER REFERENCES Users,
     time TIMESTAMP
 );
 
-CREATE TABLE messages (
+CREATE TABLE Messages (
     id SERIAL PRIMARY KEY,
     content TEXT,
-    thread_id INTEGER REFERENCES threads ON DELETE CASCADE,
-    user_id INTEGER REFERENCES users,
+    thread_id INTEGER REFERENCES Threads ON DELETE CASCADE,
+    user_id INTEGER REFERENCES Users,
     time TIMESTAMP
+);
+
+CREATE TABLE SecretThreadUsers (
+    id INTEGER PRIMARY KEY,
+    topic_id INTEGER REFERENCES Topics ON DELETE CASCADE,
+    user_id INTEGER REFERENCES Users
 );
