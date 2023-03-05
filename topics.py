@@ -29,7 +29,7 @@ def get_list():
 
 def find_by_id(id):
     sql = text("""
-        SELECT O.id, O.title
+        SELECT O.id, O.title, O.secret
         FROM topics O
             LEFT JOIN SecretTopicUsers STU ON STU.topic_id = O.id AND NOT :user_admin
         WHERE (O.id=:id) AND ((NOT O.secret OR STU.user_id = :user_id) OR :user_admin)

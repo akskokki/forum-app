@@ -21,6 +21,15 @@ def create(username, password):
     return True
 
 
+def find_by_name(username):
+    sql = text("SELECT id FROM users WHERE username=:username")
+    result = db.session.execute(sql, {"username": username})
+    user = result.fetchone()
+    if user:
+        return user.id
+    return 0
+
+
 def login(username, password):
     sql = text("SELECT id, password, admin FROM users WHERE username=:username")
     result = db.session.execute(sql, {"username": username})

@@ -14,6 +14,24 @@
                 </div>
             {% endif %}
         </div>
+        {% if topic.secret and session.admin %}
+            <div class="row py-2 fs-5 fw-bold">
+                <div class="col-12">
+                    User access management
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-7">
+                    <form action="/topic/{{ topic.id }}/grantaccess" method="POST">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Username" name="username">
+                            <button class="btn btn-outline-success" type="submit">Grant Access</button>
+                        </div>
+                        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                    </form>
+                </div>
+            </div>
+        {% endif %}
 
         <div class="row py-2 border-bottom fs-5 fw-bold">
             <div class="col-7">Thread</div>

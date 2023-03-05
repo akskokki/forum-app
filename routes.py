@@ -236,6 +236,18 @@ def removemessage(topic_id, thread_id, message_id):
     return redirect(f"/topic/{topic_id}/thread/{thread_id}")
 
 
+@app.route("/topic/<int:topic_id>/grantaccess", methods=["POST"])
+def grantaccess(topic_id):
+    if not users.admin() or session["csrf_token"] != request.form["csrf_token"]:
+        return redirect("/noperms")
+    username = request.form["username"]
+    user_id = users.find_by_name(username)
+    if user_id == 0:
+        return redirect(url_for(".topic", topic_id=topic_id, notification=f"User '{username}' not found"))
+    topics.add_secret_user(topic_id, user_id)
+    return redirect(url_for(".topic", topic_id=topic_id, notification=f"User '{username}' has been granted access"))
+
+
 @app.route("/noperms")
 def noperms():
     return render_template("noperms.html")
