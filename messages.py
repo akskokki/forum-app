@@ -24,6 +24,21 @@ def create(thread_id, content):
     db.session.commit()
     return True
 
+def search(query):
+    sql = text("""
+        SELECT M.id, M.content, U.username, M.time,
+            THR.id thread_id, THR.title thread_title,
+            TOP.id topic_id, TOP.title topic_title
+        FROM messages M
+            LEFT JOIN users U ON M.user_id = U.id
+            LEFT JOIN threads THR ON M.thread_id = THR.id
+            LEFT JOIN topics TOP ON THR.topic_id = TOP.id
+        WHERE M.content LIKE :query
+        ORDER BY M.id DESC
+    """)
+    result = db.session.execute(sql, {"query":f"%{query}%"})
+    return result.fetchall()
+
 def edit(message_id, new_content):
     user_id = users.user_id()
     sql = text("UPDATE messages SET content=:new_content WHERE user_id=:user_id AND id=:message_id RETURNING id")

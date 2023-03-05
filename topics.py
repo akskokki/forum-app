@@ -18,13 +18,6 @@ def get_list():
             LEFT JOIN users U ON U.id = M.user_id
         ORDER BY O.title ASC
     """)
-
-    sql2 = text("SELECT O.id, O.title, COUNT(DISTINCT H.id) thread_count, COUNT(M.id) message_count "\
-                "FROM topics O "\
-                "LEFT JOIN threads H ON O.id=H.topic_id "\
-                "LEFT JOIN messages M ON H.id=M.thread_id "\
-                "GROUP BY O.id "\
-                "ORDER BY O.id")
     result = db.session.execute(sql)
     return result.fetchall()
 

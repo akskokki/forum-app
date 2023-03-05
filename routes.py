@@ -59,6 +59,12 @@ def logout():
     users.logout()
     return redirect("/")
 
+@app.route("/search")
+def search():
+    query = request.args["query"]
+    messages_list = messages.search(query)
+    return render_template("search.html", query=query, messages=messages_list)
+
 @app.route("/createtopic", methods=["GET", "POST"])
 def createtopic():
     if not users.admin():
