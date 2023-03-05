@@ -6,7 +6,8 @@ import messages
 
 def get_list(topic_id):
     sql = text("""
-        SELECT T.id, T.title, TU.username, S.latest_time, MU.username latest_user, S.message_count
+        SELECT T.id, T.title, TU.username, S.latest_time,
+            MU.username latest_user, S.message_count
         FROM threads T
             LEFT JOIN (
                 SELECT thread_id, MAX(time) latest_time, COUNT(id) message_count

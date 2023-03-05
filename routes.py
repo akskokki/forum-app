@@ -114,7 +114,10 @@ def createtopic():
         if session["csrf_token"] != request.form["csrf_token"]:
             return redirect("/noperms")
         title = request.form["title"]
-        topics.create(title)
+        secret = False
+        if "secret" in request.form:
+            secret = True
+        topics.create(title, secret)
         return redirect("/")
     return redirect("/")
 
@@ -123,6 +126,8 @@ def createtopic():
 def topic(topic_id):
     notification = check_args("notification")
     topic = topics.find_by_id(topic_id)
+    if topic == None:
+        return redirect("/noperms")
     thread_list = threads.get_list(topic_id)
     return render_template(
         "topic.html",
@@ -136,6 +141,8 @@ def createthread(topic_id):
     if users.user_id() == 0:
         return redirect("/noperms")
     topic = topics.find_by_id(topic_id)
+    if topic == None:
+        return redirect("/noperms")
     if request.method == "GET":
         notification = check_args('notification')
         return render_template(
@@ -157,6 +164,8 @@ def createthread(topic_id):
 @app.route("/topic/<int:topic_id>/thread/<thread_id>")
 def thread(topic_id, thread_id):
     topic = topics.find_by_id(topic_id)
+    if topic == None:
+        return redirect("/noperms")
     thread = threads.find_by_id(thread_id)
     messages_list = messages.get_list(thread_id)
     return render_template(
@@ -169,8 +178,10 @@ def thread(topic_id, thread_id):
 @app.route("/topic/<int:topic_id>/thread/<int:thread_id>/createmessage",
            methods=["POST"])
 def createmessage(topic_id, thread_id):
-    if users.user_id(
-    ) == 0 or session["csrf_token"] != request.form["csrf_token"]:
+    if users.user_id() == 0 or session["csrf_token"] != request.form["csrf_token"]:
+        return redirect("/noperms")
+    topic = topics.find_by_id(topic_id)
+    if topic == None:
         return redirect("/noperms")
     content = request.form["content"]
     messages.create(thread_id, content)
