@@ -1,6 +1,7 @@
 [FORMAT]
 
 good-names=id
+ignored-classes=scoped_session
 
 [MESSAGES CONTROL]
 
@@ -9,6 +10,7 @@ disable=missing-module-docstring,
         import-error,
         cyclic-import,
         broad-exception-caught,
+        broad-except,
         redefined-builtin,
         redefined-outer-name,
         too-many-return-statements
