@@ -1,5 +1,6 @@
-from db import db
 from sqlalchemy.sql import text
+from db import db
+
 
 def get_list():
     sql = text("""
@@ -21,10 +22,12 @@ def get_list():
     result = db.session.execute(sql)
     return result.fetchall()
 
+
 def find_by_id(id):
     sql = text("SELECT id, title FROM topics WHERE id=:id")
     result = db.session.execute(sql, {"id": id})
     return result.fetchone()
+
 
 def create(title):
     sql = text("INSERT INTO topics (title) VALUES (:title)")
