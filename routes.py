@@ -236,10 +236,22 @@ def createmessage(topic_id, thread_id):
 @app.route("/topic/<int:topic_id>/thread/<int:thread_id>/editthread/<int:message_id>",
            methods=["POST"])
 def editthread(topic_id, thread_id, message_id):
-    new_title = request.form["title"]
-    new_content = request.form["content"]
     if session["csrf_token"] != request.form["csrf_token"]:
         return redirect("/noperms")
+    new_title = request.form["title"]
+    new_content = request.form["content"]
+    notification = None
+    if len(new_title) < 3 or len(new_title) > 32:
+        notification = "Thread title must be 3-32 characters long"
+    if len(new_content) < 1 or len(new_content) > 500:
+        notification = "Thread content must be 1-500 characters long"
+    if notification:
+        return redirect(
+            url_for(
+                ".thread",
+                notification=notification,
+                topic_id=topic_id,
+                thread_id=thread_id))
     if not threads.edit(thread_id, new_title):
         return redirect("/noperms")
     if not messages.edit(message_id, new_content):
@@ -253,6 +265,13 @@ def editmessage(topic_id, thread_id, message_id):
     if session["csrf_token"] != request.form["csrf_token"]:
         return redirect("/noperms")
     new_content = request.form["new_content"]
+    if len(new_content) < 1 or len(new_content) > 500:
+        return redirect(
+            url_for(
+                ".thread",
+                notification="Reply content must be 1-500 characters long",
+                topic_id=topic_id,
+                thread_id=thread_id))
     if not messages.edit(message_id, new_content):
         return redirect("/noperms")
     return redirect(f"/topic/{topic_id}/thread/{thread_id}")
