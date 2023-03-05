@@ -28,8 +28,10 @@
                     {% endif %}
                     <li class="nav-item">
                         <form class="d-flex" action="/search" method="GET">
-                            <input class="form-control mx-2" type="search" placeholder="Search" name="query">
-                            <button class="btn btn-outline-secondary" type="submit">Search</button>
+                            <div class="input-group mx-2">
+                                <input class="form-control" type="search" placeholder="Search" name="query">
+                                <button class="btn btn-outline-secondary" type="submit">Search</button>
+                            </div>
                         </form>
                     </li>
                 </ul>
